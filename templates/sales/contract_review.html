@@ -1,0 +1,73 @@
+{% extends 'index.html' %}
+{% load crm_tags %}
+
+{% block extra-css-resources %}
+    <style>
+        .mtop {
+            margin-top: 5px;
+        }
+    </style>
+{% endblock %}
+
+{% block page-content %}
+    <div id="wizard" class="bwizard clearfix" style="margin-top: 10px;">
+        <ol class="bwizard-steps clearfix clickable" role="tablist">
+            <li role="tab" aria-selected="false" class="" style="z-index: 4;"><span class="label">1</span><a
+                    href="#step1"
+                    class="hidden-phone">学员报名</a></li>
+            <li role="tab" aria-selected="true" style="z-index: 3;" class="active"><span class="label">2</span><a
+                    href="#step2"
+                    class="hidden-phone">学员信息审核</a>
+            </li>
+            <li role="tab" aria-selected="false" style="z-index: 2;" class=""><span
+                    class="label badge-inverse">3</span><a href="#step3" class="hidden-phone">Unordered List</a></li>
+            <li role="tab" aria-selected="false" style="z-index: 1;" class=""><span class="label">4</span><a
+                    href="#step4"
+                    class="hidden-phone">Kitchen
+                Sink</a></li>
+        </ol>
+    </div>
+    <div class="well">
+        <div class="form-horizontal">
+            {% for field in customer_form %}
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <div class="col-sm-6 mtop">
+                        {{ field.value }}
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">所报班级</label>
+                <div class="col-sm-6 mtop">
+                    {{ enroll_obj.enrolled_class }}
+                </div>
+            </div>
+
+            {#            <a  href="{% url 'enrollment_rejection'  enroll_obj.id %}" class="btn btn-danger">驳回合同</a>#}
+            {#            <a href="{% url 'payment' enroll_obj.id %}" class="btn btn-success pull-right" >审核通过</a>#}
+
+            <div class="form-group">
+                <div class="col-sm-2 col-offset-1">
+                    <a href="{% url 'enrollment_rejection'  enroll_obj.id %}" class="btn btn-danger">驳回合同</a>
+                </div>
+                <div class="col-sm-2">
+                    <a href="{% url 'payment' enroll_obj.id %}" class="btn btn-success pull-right">审核通过</a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+{% block extra-js %}
+    <script>
+        $("#wizard").bwizard();
+    </script>
+
+{% endblock %}

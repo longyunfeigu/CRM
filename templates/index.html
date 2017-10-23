@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block body-content %}
+<!-- header -->
+<header id="header" class="navbar">
+    <ul class="nav navbar-nav navbar-avatar pull-right">
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="hidden-sm-only">{{ request.user.name }}</span>
+                <span class="thumb-small avatar inline"><img src="/static/img/avatar.jpg" alt="Mika Sokeil"
+                                                             class="img-circle"></span>
+                <b class="caret hidden-sm-only"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="{% url 'acc_logout' %}">Logout</a></li>
+            </ul>
+        </li>
+    </ul>
+    <a class="navbar-brand" href="/crm/">CRM</a>
+    <button type="button" class="btn btn-link pull-left nav-toggle hidden-lg"
+            data-toggle="class:slide-nav slide-nav-left" data-target="body">
+        <i class="icon-reorder icon-xlarge text-default"></i>
+    </button>
+</header>
+<!-- / header -->
+<!-- nav -->
+<nav id="nav" class="nav-primary visible-lg nav-vertical">
+    <ul class="nav" data-spy="affix" data-offset-top="50">
+        {% for  role in request.user.roles.all %}
+            {% for menu in role.menus.all %}
+                <li class="">
+                    {% if menu.url_type == 0 %}
+                        <a href="{% url menu.url_name %}">{{ menu.name }}</a>
+                    {% else %}
+                        <a href="{{ menu.url_name }}">{{ menu.name }}</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+
+
+</nav>
+<!-- / nav -->
+<section id="content">
+    <section class="main padder">
+        {% block page-content %}{% endblock %}
+    </section>
+</section>
+
+<!-- footer -->
+<footer id="footer">
+    <div class="text-center padder clearfix" style='height:600px'></div>
+</footer>
+
+<a href="#" class="hide slide-nav-block" data-toggle="class:slide-nav slide-nav-left" data-target="body"></a>
+<!-- / footer -->
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'old/base.html' %}
+
+{% block body %}
+    <body>
+        <!--       导航栏         -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                            aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="javascript:void(0)">客户关系管理系统</a>
+                </div>
+
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="javascript:void(0)">{{ request.user }}</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+
+        <div class="container-fluid">
+            <div class="row">
+
+                <!--                左侧菜单栏                -->
+                <div class="col-sm-3 col-md-2 sidebar">
+                    <ul class="nav nav-sidebar">
+                        {% for  role in request.user.userprofile.roles.all %}
+                            {% for menu in role.menus.all %}
+                                <li class=""><a href="{% url menu.url_name %}">{{ menu.name }}</a></li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+
+                </div>
+
+                <!--                右侧内容区                -->
+                <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                    {% block page-content %}
+
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+
+
+    </body>
+
+{% endblock %}

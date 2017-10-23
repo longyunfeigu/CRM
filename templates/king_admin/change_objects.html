@@ -1,0 +1,157 @@
+{% extends 'king_admin/table_index.html' %}
+{% load tags %}
+
+{% block extra-css-resources %}
+    <style>
+        .m2m_select {
+            width: 240px;
+            height: 250px !important;
+        }
+
+        .selector-chooser {
+            float: left;
+            width: 22px;
+            background-color: #eee;
+            border-radius: 10px;
+            margin: 10em 17px 73px 34px;
+            padding: 0;
+        }
+
+        .selector-chooser li {
+            list-style: none;
+            height: 24px;
+        }
+
+        .selector-add {
+            background: url('http://127.0.0.1:8000/static/admin/img/selector-icons.svg') 0 -96px no-repeat;
+        }
+
+        .selector-remove {
+            background: url('http://127.0.0.1:8000/static/admin/img/selector-icons.svg') 0 -64px no-repeat;
+        }
+
+        .selector-add, .selector-remove {
+            width: 16px;
+            height: 16px;
+            display: block;
+            text-indent: -3000px;
+            overflow: hidden;
+            cursor: default;
+            opacity: 0.3;
+            margin-top: 7px;
+            margin-left: 2px;
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block container %}
+
+    <form class="form-horizontal" method="POST" onsubmit="return SelectAllChosenData();">
+        {% csrf_token %}
+        <div style="color: red;margin-left: 308px;margin-bottom: 34px;">
+            {% get_mdform_errors md_form_obj as mdform_errors %}
+            {% for error in mdform_errors %}
+                <div>{{ error.message }}</div>
+            {% endfor %}
+        </div>
+        {% for field in md_form_obj %}
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label" style="font-weight: normal">
+                    {% if field.field.required %}
+                        <b>{{ field.label }}</b>
+                    {% else %}
+                        {{ field.label }}
+                    {% endif %}
+                </label>
+                <div class="col-sm-6">
+                    {% if field.name in admin_class.filter_horizontal %}
+                        <div class="row">
+                            <div class="col-md-5" style="display: inline-block">
+                                {% get_m2m_obj_list admin_class field md_form_obj as unselected_obj_list %}
+                                {% if field.name in admin_class.readonly_fields and not admin_class.add_form or admin_class.readonly_table %}
+                                    <select class="form-control m2m_select" multiple style="margin-left: 13px;">
+                                        {% for obj in unselected_obj_list %}
+                                            <option value="{{ obj.id }}" title="{{ obj.name }}">{{ obj.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% else %}
+                                <select class="form-control m2m_select" multiple id="id_{{ field.name }}_from" style="margin-left: 13px;">
+                                    {% for obj in unselected_obj_list %}
+                                        <option value="{{ obj.id }}" title="{{ obj.name }}" ondblclick="MoveElementTo(this,'id_{{ field.name }}_to','id_{{ field.name }}_from')">{{ obj.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-1" style="display: inline-block">
+                                <ul class="selector-chooser">
+                                    <li><a title="Choose" href="javascript:void(0)" id="id_tags_add_link" class="selector-add">Choose</a></li>
+                                    <li><a title="Remove" href="javascript:void(0)" id="id_tags_remove_link" class="selector-remove">Remove</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-5" style="display: inline-block">
+                                {% get_m2m_selected_obj_list md_form_obj field as selected_obj_list %}
+                                {% if field.name in admin_class.readonly_fields and not admin_class.add_form or admin_class.readonly_table %}
+                                    <select class="form-control m2m_select selected" multiple
+                                            name="{{ field.name }}" style="margin-left: 13px;" disabled>
+                                        {% for obj in selected_obj_list %}
+                                            <option value="{{ obj.id }}" title="{{ obj.name }}">{{ obj.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% else %}
+                                    <select class="form-control m2m_select selected" multiple id="id_{{ field.name }}_to"
+                                        name="{{ field.name }}" style="margin-left: 13px;">
+                                        {% for obj in selected_obj_list %}
+                                            <option value="{{ obj.id }}" title="{{ obj.name }}"  ondblclick="MoveElementTo(this,'id_{{ field.name }}_from','id_{{ field.name }}_to')" >{{ obj.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% endif %}
+                            </div>
+                            <span style="margin-left: 10px;">{{ field.errors.as_text }}</span>
+                        </div>
+                    {% else %}
+                        {{ field }}
+                        <span style="color: grey">{{ field.help_text }}</span>
+                        <span style="color: red">{{ field.errors.as_text }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+        <div class="form-group">
+            {% if not admin_class.readonly_table %}
+            <div class="col-lg-8">
+                {% block delete_button %}
+                <a href="{% url 'delete_objects' app_name table_name md_form_obj.instance.id %}" class="btn btn-danger" style="margin-left: 208px">Delete</a>
+                {% endblock %}
+                <button type="submit" class="btn btn-primary pull-right">Save</button>
+            </div>
+            {% else %}{% endif %}
+        </div>
+    <form>
+{% endblock %}
+
+{% block extra-js %}
+    <script>
+        function MoveElementTo(ele,target_id,new_target_id) {
+        var opt_ele = "<option value='" + $(ele).val() + "' ondblclick=MoveElementTo(this,'" + new_target_id +"','"+ target_id +"')>" + $(ele).text() + "</option>";
+        $("#" + target_id).append(opt_ele);
+        $(ele).remove();
+        }
+
+        function SelectAllChosenData() {
+            $('form :disabled').removeAttr('disabled');
+            $(".selected option").each(function () {
+                $(this).prop("selected",true);
+            });
+            return true;
+        }
+        $('#id_tags_add_link').click(function () {
+            $('#id_tags_to').append($('#id_tags_from')[0].selectedOptions)
+        });
+
+        $('#id_tags_remove_link').click(function () {
+            $('#id_tags_from').append($('#id_tags_to')[0].selectedOptions)
+        })
+    </script>
+{% endblock %}

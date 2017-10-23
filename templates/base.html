@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>My CRM</title>
+    <meta name="description" content="mobile first, app, web app, responsive, admin dashboard, flat, flat ui">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/plugin.css">
+    <link rel="stylesheet" href="/static/css/landing.css">
+    <link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet" />
+	<link href="/static/css/bwizard.min.css" rel="stylesheet" />
+	<link href="/static/plugins/dropzone/dropzone.css" rel="stylesheet" />
+    {% block extra-css-resources %}{% endblock %}
+
+</head>
+<body>
+
+{% block body-content %}
+
+{% endblock %}
+
+<script src="/static/js/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="/static/js/bootstrap.js"></script>
+<!-- app -->
+<script src="/static/js/app.js"></script>
+<script src="/static/js/app.plugin.js"></script>
+<script src="/static/js/app.data.js"></script>
+
+<!-- Sparkline Chart -->
+<script src="/static/js/charts/sparkline/jquery.sparkline.min.js"></script>
+<!-- Easy Pie Chart -->
+<script src="/static/js/charts/easypiechart/jquery.easy-pie-chart.js"></script>
+<script src="/static/js/ie/excanvas.js"></script>
+<script src="/static/js/wizard/bwizard.min.js" type="text/javascript"></script>
+<script src="/static/plugins/dropzone/dropzone.js" type="text/javascript"></script>
+{% block extra-js %}{% endblock %}
+</body>
+</html>

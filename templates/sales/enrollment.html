@@ -1,0 +1,68 @@
+{% extends 'index.html' %}
+{% load crm_tags %}
+
+{% block page-content %}
+    <div id="wizard" class="bwizard clearfix" style="margin-top: 10px;">
+        <ol class="bwizard-steps clearfix clickable" role="tablist">
+            <li role="tab" aria-selected="true" class="active" style="z-index: 4;"><span class="label">1</span><a
+                    href="#step1"
+                    class="hidden-phone">学员报名</a></li>
+            <li role="tab" aria-selected="false" style="z-index: 3;" class=""><span class="label">2</span><a
+                    href="#step2"
+                    class="hidden-phone">Paragraph</a>
+            </li>
+            <li role="tab" aria-selected="false" style="z-index: 2;" class=""><span
+                    class="label badge-inverse">3</span><a href="#step3" class="hidden-phone">Unordered List</a></li>
+            <li role="tab" aria-selected="false" style="z-index: 1;" class=""><span class="label">4</span><a
+                    href="#step4"
+                    class="hidden-phone">Kitchen
+                Sink</a></li>
+        </ol>
+    </div>
+    <div class="well">
+        <form class="form-horizontal" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label  class="col-sm-2 control-label" for="customer">客户</label>
+                <div class="col-sm-6" id="customer" style="margin-top: 4px;">
+                    qq: {{ customer_obj.qq }}  &nbsp; &nbsp;&nbsp;name: {{ customer_obj.name }}
+                </div>
+            </div>
+            {% for field in enroll_form %}
+                <div class="form-group">
+                    <label  class="col-sm-2 control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <div class="col-sm-6">
+                        {{ field }}
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="form-group">
+                <div class="col-sm-4 col-offset-2" style="color: red">
+                    {% get_mdform_errors enroll_form as enroll_form_errors %}
+                    {% for error in enroll_form_errors %}
+                        <span class="btn btn-danger">{{ error.message }}</span>
+                    {% endfor %}
+                </div>
+                <div class="col-sm-2">
+                  <button class="btn btn-info col-offset-6" type="submit" style="padding: 10px 22px;">下一步</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-4 col-offset-2" style="color: red">
+                {{ msg }}
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+
+
+{% endblock %}
+
+{% block extra-js %}
+    <script>
+        $("#wizard").bwizard();
+    </script>
+
+{% endblock %}

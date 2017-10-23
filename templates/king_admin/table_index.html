@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load tags %}
+
+{% block body-content %}
+
+    <!-- header -->
+    <header id="header" class="navbar">
+        <ul class="nav navbar-nav navbar-avatar pull-right">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="hidden-sm-only">{{ request.user.name }}</span>
+                    <span class="thumb-small avatar inline"><img src="/static/img/avatar.jpg" alt="Mika Sokeil"
+                                                                 class="img-circle"></span>
+                    <b class="caret hidden-sm-only"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="signin.html">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+        <a class="navbar-brand" href="/crm/">CRM</a>
+        <button type="button" class="btn btn-link pull-left nav-toggle hidden-lg"
+                data-toggle="class:slide-nav slide-nav-left" data-target="body">
+            <i class="icon-reorder icon-xlarge text-default"></i>
+        </button>
+    </header>
+    <!-- / header -->
+
+    <div class="container" style="margin: 50px;">
+        {% block container %}
+            {% for app_name, table in enabled_admin.items %}
+                <div class="panel panel-info col-lg-10 col-offset-1">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ app_name }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-hover">
+                            <thead></thead>
+                            <tbody>
+                            {% for table_name, admin_class in table.items %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'display_table_objects' app_name table_name %}">
+                                            {% display_table_name admin_class %}
+                                        </a>
+                                    </td>
+                                    <td>add</td>
+                                    <td>change</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endblock %}
+    </div>
+
+
+{% endblock %}

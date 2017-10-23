@@ -1,0 +1,14 @@
+{% extends 'king_admin/table_index.html' %}
+{% load tags %}
+
+{% block container %}
+    {% display_obj_related objs %}
+    <form method="POST">
+        {% csrf_token %}
+        <input class="btn btn-danger" value="Yes, I'm sure" type="submit">
+        <input type="hidden" value="yes" name="delete_confirm">
+        <input type="hidden" value="{{ selected_ids }}" name="selected_ids">
+        <input type="hidden" value="{{ action }}" name="action">
+        <a class="btn btn-info" href="{% url 'display_table_objects' app_name table_name %}">No,take me back</a>
+    </form>
+{% endblock %}

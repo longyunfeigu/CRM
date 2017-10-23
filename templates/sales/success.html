@@ -1,0 +1,42 @@
+{% extends 'index.html' %}
+{% load crm_tags %}
+
+{% block extra-css-resources %}
+    <style>
+        .mtop {
+            margin-top: 5px;
+        }
+    </style>
+{% endblock %}
+
+{% block page-content %}
+    <div id="wizard" class="bwizard clearfix" style="margin-top: 10px;">
+        <ol class="bwizard-steps clearfix clickable" role="tablist">
+            <li role="tab" aria-selected="false" class="" style="z-index: 4;"><span class="label">1</span><a
+                    href="#step1"
+                    class="hidden-phone">学员报名</a></li>
+            <li role="tab" aria-selected="false" style="z-index: 3;" class=""><span class="label">2</span><a
+                    href="#step2"
+                    class="hidden-phone">学员信息审核</a>
+            </li>
+            <li role="tab" aria-selected="false" style="z-index: 2;" class=""><span
+                    class="label badge-inverse">3</span><a href="#step3" class="hidden-phone">生成缴费记录</a></li>
+            <li role="tab" aria-selected="true" style="z-index: 1;" class="active"><span class="label">4</span><a
+                    href="#step4"
+                    class="hidden-phone">报名成功</a></li>
+        </ol>
+    </div>
+    <div class="well">
+        <h3>报名流程结束，恭喜您业绩又上升了</h3>
+
+    </div>
+
+
+{% endblock %}
+
+{% block extra-js %}
+    <script>
+        $("#wizard").bwizard();
+    </script>
+
+{% endblock %}

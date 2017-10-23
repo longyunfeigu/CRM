@@ -1,0 +1,88 @@
+{%  extends 'index.html' %}
+{% load stu_tags %}
+
+{% block page-content %}
+
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">班级:{{ studyrecord_obj.student.enrolled_class }}  | 节次{{ studyrecord_obj.course_record.day_num }}</div>
+  <div class="panel-body">
+        <h4>作业标题:{{ studyrecord_obj.course_record.homework_title }}</h4>
+        <h4>作业详情：
+            {% if studyrecord_obj.course_record.homework_content %}
+            <pre>{{ studyrecord_obj.course_record.homework_content }}</pre>
+            {% else %}  无
+            {% endif %}
+        </h4>
+        <h4>老师评语:
+             {% if studyrecord_obj.memo %}
+            {{ studyrecord_obj.memo }}
+            {% else %}  无
+            {% endif %}
+        </h4>
+        <h4>本节成绩:{{ studyrecord_obj.score }}</h4>
+        <div class="row">
+            {% if file_list %}
+            <h4 style="margin-left: 30px">已上传作业:</h4>
+            <ul>
+                {% for file in file_list %}
+                <li>{{ file.0 }} | {{ file.1 }}KB | {{ file.2 }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}<h4 style="margin-left: 30px">还未上传作业,请上传zip压缩包格式的作业文件</h4>
+            {% endif %}
+        </div>
+        <form id="filedropzone" method="post" action="{{ request.path }}" class="dropzone dz-clickable" >{% csrf_token %}
+            <div class="dz-default dz-message">
+                <div class="dz-icon icon-wrap icon-circle icon-wrap-md">
+                    <i class="fa fa-cloud-upload fa-3x"></i>
+                </div>
+                <div>
+                    <p class="dz-text">把作业文件拖放到这里</p>
+                    <p class="text-muted">只能上传zip格式的文件</p>
+                </div>
+            </div>
+
+        </form>
+
+  </div>
+  <!-- Table -->
+</div>
+{% endblock %}
+
+{% block extra-js %}
+<script>
+    $(document).ready(function () {
+         Dropzone.options.filedropzone = {
+          url:"{{ request.path }}",
+          paramName: "file", // The name that will be used to transfer the file
+          maxFilesize: 3, // MB,
+          addRemoveLinks:true,
+          maxFiles:5,
+          uploadMultiple:true,
+          accept: function(file, done) {
+            if (! file.name.endsWith(".zip") ) {
+              alert("只能上传.zip格式的压缩包");
+                done("文件为上传");
+                myDropzone.removeFile(file);
+            }
+            else { done(); }
+          }
+        };
+
+      Dropzone.autoDiscover = false;
+      myDropzone = new Dropzone("#filedropzone");
+      myDropzone.on("addedfile", function(file) {
+        /* Maybe display some more file information on your page */
+        console.log("-------",file)
+      });
+
+      myDropzone.on("success", function(file,response) {
+          /* Maybe display some more file information on your page */
+          console.log('filex upload done...', response);
+      } )
+
+    })
+
+</script>
+{% endblock %}
